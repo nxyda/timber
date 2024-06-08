@@ -11,8 +11,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 LIGHT_GREEN = (27, 250, 27)
 
-font = pygame.font.Font(None, 36)
+score_font = pygame.font.Font(None, 48)
 game_over_font = pygame.font.Font(None, 72)
+
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Timber Stacking")
@@ -23,17 +24,24 @@ timber_right_img = pygame.image.load('timber/timber_right.png').convert_alpha()
 timber_img = pygame.image.load('timber/timber.png').convert_alpha()
 player_img = pygame.image.load('timber/player.png').convert_alpha()
 
-timber_left_img = pygame.transform.scale(timber_left_img, (timber_left_img.get_width() * 2, timber_left_img.get_height() * 2))
-timber_right_img = pygame.transform.scale(timber_right_img, (timber_right_img.get_width() * 2, timber_right_img.get_height() * 2))
-timber_img = pygame.transform.scale(timber_img, (timber_img.get_width() * 2, timber_img.get_height() * 2))
-player_img = pygame.transform.scale(player_img, (player_img.get_width() * 2, player_img.get_height() * 2))
+timber_left_img = pygame.transform.scale(
+    timber_left_img,
+    (timber_left_img.get_width() * 2, timber_left_img.get_height() * 2))
+timber_right_img = pygame.transform.scale(
+    timber_right_img,
+    (timber_right_img.get_width() * 2, timber_right_img.get_height() * 2))
+timber_img = pygame.transform.scale(
+    timber_img, (timber_img.get_width() * 2, timber_img.get_height() * 2))
+player_img = pygame.transform.scale(
+    player_img, (player_img.get_width() * 2, player_img.get_height() * 2))
 
 timber_width, timber_height = timber_img.get_rect().size
 timber_left_width = timber_left_img.get_rect().width
 timber_right_width = timber_right_img.get_rect().width
 
 player_height = timber_height
-player_width = int(player_img.get_rect().width * (player_height / player_img.get_rect().height))
+player_width = int(player_img.get_rect().width *
+                   (player_height / player_img.get_rect().height))
 player_img = pygame.transform.scale(player_img, (player_width, player_height))
 
 left_player_x = (SCREEN_WIDTH - timber_width) // 2 - player_width - 60
@@ -65,16 +73,21 @@ score = 0
 font = pygame.font.Font(None, 36)
 game_over = False
 
+
 def move_blocks_down():
     global score
     blocks.pop(0)
     score += 1
 
+
 def check_game_over():
     bottom_block = blocks[1]
-    if (player_x == left_player_x and bottom_block == "left") or (player_x == right_player_x and bottom_block == "right"):
+    if (player_x == left_player_x
+            and bottom_block == "left") or (player_x == right_player_x
+                                            and bottom_block == "right"):
         return True
     return False
+
 
 while True:
     for event in pygame.event.get():
@@ -126,22 +139,25 @@ while True:
             x_position = (SCREEN_WIDTH - timber_right_width) // 2 + 57
             screen.blit(timber_right_img, (x_position, y_position))
         else:
-            x_position = (SCREEN_WIDTH - timber_width) // 2 
+            x_position = (SCREEN_WIDTH - timber_width) // 2
             screen.blit(timber_img, (x_position, y_position))
 
     screen.blit(player_img, (player_x, player_y))
 
-    score_text = font.render(f"Score: {score}", True, BLACK)
-    screen.blit(score_text, (10, 10))
+    score_text = score_font.render(f"{score}", True, WHITE)
+    screen.blit(score_text, (SCREEN_WIDTH // 2 - 10, SCREEN_HEIGHT // 2))
 
     if game_over:
         screen.fill(BLACK)
         game_over_text = game_over_font.render("GAME OVER", True, LIGHT_GREEN)
-        game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        game_over_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2,
+                                                         SCREEN_HEIGHT // 2))
         screen.blit(game_over_text, game_over_rect)
 
-        final_score_text = font.render(f"Final Score: {score}", True, LIGHT_GREEN)
-        final_score_rect = final_score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50))
+        final_score_text = score_font.render(f"Final Score: {score}", True,
+                                       LIGHT_GREEN)
+        final_score_rect = final_score_text.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50))
         screen.blit(final_score_text, final_score_rect)
 
     pygame.display.update()
